@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/bash
 set -euo pipefail
 SIGSTORE_PUB=$(echo keys/*.pub)
 SIGSTORE_PREFIX=${SIGSTORE_PUB%.*}

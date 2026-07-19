@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/bash
 set -euxo pipefail
 CURRENT_BRANCH=$(git branch --show-current)
 git remote set-head origin -a
