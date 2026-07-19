@@ -16,7 +16,8 @@ BRANCHES=$(git ls-remote -qb | sed 's|.*\srefs/heads/||')
 
 for BRANCH in $BRANCHES; do
     [ "$BRANCH" != "$MAIN_BRANCH" ] || continue
-    git switch "$BRANCH"
+    git fetch --depth=1 origin "refs/heads/$BRANCH:remotes/origin/$BRANCH"
+    git switch -c "$BRANCH" "origin/$BRANCH"
     . ./env.sh
     if [ -e "diverge-$BRANCH" ]; then
         ./check.sh || ./build.sh
