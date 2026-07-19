@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+set -euxo pipefail
+dnf -y install systemd-boot-unsigned sbsigntools systemd-ukify chunkah
+dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+dnf -y install akmod-nvidia xorg-x11-drv-nvidia-cuda || true
+systemctl disable akmods
+
+kver=$(ls /usr/lib/modules)
+akmods --kernels "$kver"
+
+unlink /usr/local || true
+mkdir -p /usr/local/bin /usr/local/etc /usr/local/games /usr/local/include \
+    /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/src
+
+sed -i 's| /root| /var/roothome|g' /usr/lib/tmpfiles.d/*.conf
+sed -i 's| /home| /var/home|g' /usr/lib/tmpfiles.d/*.conf
+sed -i 's| /srv| /var/srv|g' /usr/lib/tmpfiles.d/*.conf
+
+semodule -i /scripts/tpm2-setup.cil
+
+dnf -y remove rpm-ostree
+
+rm -f /etc/httpd/logs
+rm -f /etc/httpd/state
+
+rm -rf /ostree
+rm -rf /sysroot/ostree
