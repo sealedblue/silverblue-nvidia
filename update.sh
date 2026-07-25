@@ -1,11 +1,9 @@
 #!/usr/bin/bash
 set -euxo pipefail
-CURRENT_BRANCH=$(git branch --show-current)
-git remote set-head origin -a
-MAIN_BRANCH="$(git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4)"
+. ./env.sh
+CURRENT_BRANCH="$TAG"
 git switch "$MAIN_BRANCH"
 . ./env.sh
-MAIN_IMAGE="$IMAGE"
 
 SKIP=true
 ./check.sh || SKIP=false
