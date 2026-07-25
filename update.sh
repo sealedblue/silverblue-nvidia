@@ -21,8 +21,13 @@ for BRANCH in $BRANCHES; do
         ./check.sh || ./build.sh
     else
         if ! $SKIP; then
-            podman tag "$MAIN_IMAGE" "$IMAGE"
-            ./push.sh
+            skopeo copy --sign-by-sigstore-private-key keys/sealedblue-staged.private \
+                --sign-passphrase-file keys/sealedblue-staged.passphrase \
+                --digestfile "${DIGEST_NAME}.digest" \
+                "docker://${MAIN_IMAGE}" "docker://${IMAGE}"
+            git add "${DIGEST_NAME}.digest"
+            git commit -m "${IMAGE} pushed" || true
+            git push
         fi
     fi
 done
