@@ -3,8 +3,8 @@ set -euxo pipefail
 . ./env.sh
 
 if [[ "$TAG" != "$MAIN_BRANCH" ]] && ! [[ -e "diverge-$TAG" ]]; then
-    skopeo copy --sign-by-sigstore-private-key keys/sealedblue-staged.private \
-        --sign-passphrase-file keys/sealedblue-staged.passphrase \
+    skopeo copy --sign-by-sigstore-private-key "${SIGSTORE_PREFIX}.private" \
+        --sign-passphrase-file "${SIGSTORE_PREFIX}.passphrase" \
         --digestfile "${DIGEST_NAME}.digest" \
         "docker://${MAIN_IMAGE}" "docker://${IMAGE}"
 else
@@ -13,8 +13,8 @@ else
         --security-opt=label=disable \
         --build-arg "BASE_IMAGE=$BASE_IMAGE" \
         -t "${IMAGE}" .
-    podman push --sign-by-sigstore-private-key keys/sealedblue-staged.private \
-        --sign-passphrase-file keys/sealedblue-staged.passphrase \
+    podman push --sign-by-sigstore-private-key "${SIGSTORE_PREFIX}.private" \
+        --sign-passphrase-file "${SIGSTORE_PREFIX}.passphrase" \
         --digestfile "${DIGEST_NAME}.digest" \
         "${IMAGE}"
 fi

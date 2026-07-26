@@ -15,14 +15,14 @@ BRANCHES=$(git ls-remote -qb | sed 's|.*\srefs/heads/||')
 for BRANCH in $BRANCHES; do
     [ "$BRANCH" != "$MAIN_BRANCH" ] || continue
     git fetch --depth=1 origin "refs/heads/$BRANCH:remotes/origin/$BRANCH"
-    git switch -c "$BRANCH" "origin/$BRANCH"
+    git switch "$BRANCH" || git switch -c "$BRANCH" "origin/$BRANCH"
     . ./env.sh
     if [ -e "diverge-$BRANCH" ]; then
         ./check.sh || ./build.sh
     else
         if ! $SKIP; then
-            skopeo copy --sign-by-sigstore-private-key keys/sealedblue-staged.private \
-                --sign-passphrase-file keys/sealedblue-staged.passphrase \
+            skopeo copy --sign-by-sigstore-private-key "${SIGSTORE_PREFIX}.private" \
+                --sign-passphrase-file "${SIGSTORE_PREFIX}.passphrase" \
                 --digestfile "${DIGEST_NAME}.digest" \
                 "docker://${MAIN_IMAGE}" "docker://${IMAGE}"
             git add "${DIGEST_NAME}.digest"
