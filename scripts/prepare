@@ -6,9 +6,6 @@ dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 dnf -y install akmod-nvidia xorg-x11-drv-nvidia-cuda || true
 systemctl disable akmods
 
-kver=$(ls /usr/lib/modules)
-akmods --kernels "$kver"
-
 unlink /usr/local || true
 mkdir -p /usr/local/bin /usr/local/etc /usr/local/games /usr/local/include \
     /usr/local/lib /usr/local/sbin /usr/local/share /usr/local/src
