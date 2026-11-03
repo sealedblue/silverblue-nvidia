@@ -1,10 +1,7 @@
 #!/usr/bin/bash
 set -euxo pipefail
 dnf -y install systemd-boot-unsigned sbsigntools systemd-ukify chunkah
-rpmkeys --import \
-    /usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-free-fedora-45 \
-    /usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-nonfree-fedora-45
-rpm -U --nodeps https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+dnf -y install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 dnf -y install akmod-nvidia xorg-x11-drv-nvidia-cuda || true
 systemctl disable akmods
