@@ -13,4 +13,4 @@ MAIN_IMAGE="${IMAGE_NAME}:${MAIN_BRANCH}-unsealed"
 DIGEST_NAME=$(systemd-escape "$IMAGE")
 
 BASE_IMAGE_NAME="quay.io/fedora/fedora-silverblue"
-BASE_IMAGE="${BASE_IMAGE_NAME}:latest"
+BASE_IMAGE="${BASE_IMAGE_NAME}:45"
